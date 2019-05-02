@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 
@@ -22,15 +23,13 @@ public class DogController
 {
 
     private static final Logger logger = LoggerFactory.getLogger(Dog.class);
-    private RabbitTemplate rt; // send
+    //private RabbitTemplate rt; // send
 
-//    @Autowired
-//    MessageSender msgSender;
 
-    public DogController(RabbitTemplate rt)
-    {
-        this.rt = rt; // send
-    }
+//    public DogController(RabbitTemplate rt)
+//    {
+//        this.rt = rt; // send
+//    }
 
 
     // localhost:8080/dogs/dogs
@@ -38,12 +37,12 @@ public class DogController
     public ResponseEntity<?> getAllDogs()
     {
         logger.info("/dogs Accessed");
-        for (Dog d: ProjectrestdogsApplication.ourDogList.dogList)
-        {
-            MessageDetail message = new MessageDetail("Listing all Dogs " + d.toString());
-            logger.info(d.toString());
-            rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
-        }
+//        for (Dog d: ProjectrestdogsApplication.ourDogList.dogList)
+//        {
+//            MessageDetail message = new MessageDetail("Listing all Dogs " + d.toString());
+//            logger.info(d.toString());
+////            rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
+//        }
         return new ResponseEntity<>(ProjectrestdogsApplication.ourDogList.dogList, HttpStatus.OK);
     }
 
@@ -60,7 +59,7 @@ public class DogController
         {
             rtnDog = ProjectrestdogsApplication.ourDogList.findDog(e -> (e.getId() == id));
             MessageDetail message = new MessageDetail("Finding dog with id: " + id);
-            rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
+//            rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
         }
 
         return new ResponseEntity<>(rtnDog, HttpStatus.OK);
@@ -74,7 +73,30 @@ public class DogController
                 findDogs(d -> d.getBreed().toUpperCase().equals(breed.toUpperCase()));
         logger.info("/breeds/" + breed + " Accessed");
         MessageDetail message = new MessageDetail("Finding dog breed of: " + breed);
-        rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
+//        rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
         return new ResponseEntity<>(rtnDogs, HttpStatus.OK);
+    }
+
+    // localhost:2019/dogs/dogstable
+    @GetMapping(value = "/dogstable")
+    public ModelAndView displayDogTable()
+    {
+        ProjectrestdogsApplication.ourDogList.dogList.sort((d1, d2) -> d1.getBreed().compareToIgnoreCase(d2.getBreed()));
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("dogs");
+        mav.addObject("dogList", ProjectrestdogsApplication.ourDogList.dogList);
+        return mav;
+    }
+
+    // localhost:2019/dogs/dogsapt
+    @GetMapping(value = "/dogsapt")
+    public ModelAndView displayAptTable()
+    {
+        ArrayList<Dog> rtnApt = ProjectrestdogsApplication.ourDogList.findDogs(d -> d.isApartmentSuitable() == true);
+        rtnApt.sort((d1, d2) -> d1.getBreed().compareToIgnoreCase(d2.getBreed()));
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("apt");
+        mav.addObject("aptList", rtnApt);
+        return mav;
     }
 }

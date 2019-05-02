@@ -30,41 +30,41 @@ public class ProjectrestdogsApplication
         dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
     }
 
-    @Bean
-    public TopicExchange appExchange()
-    {
-        return new TopicExchange(EXCHANGE_NAME);
-    }
-
-    @Bean
-    public Queue appQueueLow()
-    {
-        return new Queue(QUEUE_NAME_LOW);
-    }
-
-    @Bean
-    public Binding declareBindingLow()
-    {
-        return BindingBuilder.bind(appQueueLow()).to(appExchange()).with(QUEUE_NAME_LOW);
-    }
-
-    @Bean
-    public Queue appQueueHigh()
-    {
-        return new Queue(QUEUE_NAME_HIGH);
-    }
-
-    @Bean
-    public Binding declareBindingHigh()
-    {
-        return BindingBuilder.bind(appQueueHigh()).to(appExchange()).with(QUEUE_NAME_HIGH);
-    }
-
-    @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter()
-    {
-        return new Jackson2JsonMessageConverter();
-    }
+//    @Bean
+//    public TopicExchange appExchange()
+//    {
+//        return new TopicExchange(EXCHANGE_NAME);
+//    }
+//
+//    @Bean
+//    public Queue appQueueLow()
+//    {
+//        return new Queue(QUEUE_NAME_LOW);
+//    }
+//
+//    @Bean
+//    public Binding declareBindingLow()
+//    {
+//        return BindingBuilder.bind(appQueueLow()).to(appExchange()).with(QUEUE_NAME_LOW);
+//    }
+//
+//    @Bean
+//    public Queue appQueueHigh()
+//    {
+//        return new Queue(QUEUE_NAME_HIGH);
+//    }
+//
+//    @Bean
+//    public Binding declareBindingHigh()
+//    {
+//        return BindingBuilder.bind(appQueueHigh()).to(appExchange()).with(QUEUE_NAME_HIGH);
+//    }
+//
+//    @Bean
+//    public Jackson2JsonMessageConverter producerJackson2MessageConverter()
+//    {
+//        return new Jackson2JsonMessageConverter();
+//    }
 
 }
 
