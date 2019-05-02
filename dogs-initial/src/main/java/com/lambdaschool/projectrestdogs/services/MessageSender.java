@@ -1,11 +1,10 @@
-package com.lambdaschool.Services;
+package com.lambdaschool.projectrestdogs.services;
 
 import com.lambdaschool.projectrestdogs.ProjectrestdogsApplication;
 import com.lambdaschool.projectrestdogs.model.MessageDetail;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 
 @Service
 public class MessageSender

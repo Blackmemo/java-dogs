@@ -1,12 +1,10 @@
 package com.lambdaschool.projectrestdogs.controller;
 
-import com.lambdaschool.Services.MessageSender;
 import com.lambdaschool.projectrestdogs.exception.ResourceNotFoundException;
 import com.lambdaschool.projectrestdogs.model.Dog;
 import com.lambdaschool.projectrestdogs.ProjectrestdogsApplication;
 import com.lambdaschool.projectrestdogs.model.MessageDetail;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +24,14 @@ public class DogController
     private static final Logger logger = LoggerFactory.getLogger(Dog.class);
     private RabbitTemplate rt; // send
 
+//    @Autowired
+//    MessageSender msgSender;
+
     public DogController(RabbitTemplate rt)
     {
         this.rt = rt; // send
     }
+
 
     // localhost:8080/dogs/dogs
     @GetMapping(value = "/dogs")
@@ -38,7 +40,7 @@ public class DogController
         logger.info("/dogs Accessed");
         for (Dog d: ProjectrestdogsApplication.ourDogList.dogList)
         {
-            MessageDetail message = new MessageDetail(d.toString());
+            MessageDetail message = new MessageDetail("Listing all Dogs " + d.toString());
             logger.info(d.toString());
             rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
         }
@@ -57,6 +59,8 @@ public class DogController
         } else
         {
             rtnDog = ProjectrestdogsApplication.ourDogList.findDog(e -> (e.getId() == id));
+            MessageDetail message = new MessageDetail("Finding dog with id: " + id);
+            rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
         }
 
         return new ResponseEntity<>(rtnDog, HttpStatus.OK);
@@ -69,6 +73,8 @@ public class DogController
         ArrayList<Dog> rtnDogs = ProjectrestdogsApplication.ourDogList.
                 findDogs(d -> d.getBreed().toUpperCase().equals(breed.toUpperCase()));
         logger.info("/breeds/" + breed + " Accessed");
+        MessageDetail message = new MessageDetail("Finding dog breed of: " + breed);
+        rt.convertAndSend(ProjectrestdogsApplication.QUEUE_NAME_HIGH, message);
         return new ResponseEntity<>(rtnDogs, HttpStatus.OK);
     }
 }

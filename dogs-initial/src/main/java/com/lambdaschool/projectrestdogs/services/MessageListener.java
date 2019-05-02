@@ -1,4 +1,4 @@
-package com.lambdaschool.Services;
+package com.lambdaschool.projectrestdogs.services;
 
 import com.lambdaschool.projectrestdogs.ProjectrestdogsApplication;
 import com.lambdaschool.projectrestdogs.model.MessageDetail;
@@ -12,16 +12,11 @@ public class MessageListener
 {
     private static final Logger logger = LoggerFactory.getLogger(MessageListener.class);
 
+    // Queue to Listen to
+    // Can have multiple Queues (similar to endpoints)
     @RabbitListener(queues = ProjectrestdogsApplication.QUEUE_NAME_HIGH)
-    public void recieveHighMessage(MessageDetail msg)
+    public void receiveMessage(MessageDetail msg)
     {
-        // process the message
-        logger.info("Received message {}", msg.toString());
-    }
-    @RabbitListener(queues = ProjectrestdogsApplication.QUEUE_NAME_LOW)
-    public void recieveLowMessage(MessageDetail msg)
-    {
-        // process the message
         logger.info("Received message {}", msg.toString());
     }
 }
