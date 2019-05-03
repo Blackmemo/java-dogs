@@ -1,6 +1,6 @@
 package com.lambdaschool.projectrestdogs;
 
-import com.lambdaschool.projectrestdogs.Dog;
+import com.lambdaschool.projectrestdogs.model.Dog;
 
 import java.util.ArrayList;
 
